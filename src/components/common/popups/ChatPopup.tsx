@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint react/jsx-one-expression-per-line: "off" */
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { Dialog } from '@headlessui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import EmojiPicker from 'emoji-picker-react';
 import { OverflowContext } from '../../../context/overflowContext';
 import useViewport from '../../../hooks/useViewport';
 
@@ -14,10 +16,24 @@ import SendIcon from '../../../../public/icons/send.svg';
 
 import ProfileImage from '../../../../public/Ellipse 3.jpg';
 
-const MessageBubble = ({ message }: { message: string }) => (
-  <p className="w-fit  rounded-lg border-2 border-gray-200 p-3 first:rounded-tl-none first:rounded-bl-2xl last:rounded-tl-2xl last:rounded-bl-none">
-    {message}
-  </p>
+const MessageBubble = ({ message }: { message: Message }) => (
+  <div>
+    {message.text && (
+      <p className="w-fit  rounded-lg border-2 border-gray-200 p-3 first:rounded-tl-none first:rounded-bl-2xl last:rounded-tl-2xl last:rounded-bl-none">
+        {message.text}
+      </p>
+    )}
+
+    {message.image && (
+      <Image
+        src={message.image}
+        alt="Message image"
+        objectFit="contain"
+        width={150}
+        height={150}
+      />
+    )}
+  </div>
 );
 
 interface ChatPopupTypes {
@@ -26,18 +42,28 @@ interface ChatPopupTypes {
   open: boolean;
 }
 
+interface Message {
+  text: string;
+  image?: any;
+}
+
 const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
   const { width } = useViewport();
   const { setGlobalOverflow } = useContext<any>(OverflowContext);
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
-    'Hey can you help me with this...',
+  const fileBrowserRef = useRef<any>();
+  const [message, setMessage] = useState<Message>({
+    text: '',
+  });
+  const [messages, setMessages] = useState<Message[]>([
+    { text: 'Hey can you help me with this...' },
   ]);
+  const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
-  const handleSendMessage = (message: string) => {
-    if (!message) return;
-    setMessages([...messages, message]);
-    setMessage('');
+  const handleSendMessage = (message: Message) => {
+    if (!message.text && !message.image) return;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    message.text && setMessages([...messages, { text: message.text }]);
+    setMessage({ text: '' });
     onSend();
   };
 
@@ -48,6 +74,18 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
       out.push(messages[i]);
     }
     return out;
+  };
+
+  const handleFileChange = (e: any) => {
+    const { files } = e.target;
+    if (files.length === 0) return;
+    const { type } = files[0];
+    if (type.includes('image')) {
+      setMessages([
+        ...messages,
+        { text: '', image: URL.createObjectURL(files[0]) },
+      ]);
+    }
   };
 
   return (
@@ -101,7 +139,7 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
                 },
               },
             }}
-            className="fixed bottom-0 z-10 w-full md:w-11/12 lg:relative lg:max-w-[540px]"
+            className="fixed bottom-0 w-full md:w-11/12 lg:relative lg:max-w-[540px]"
           >
             <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-6 py-5 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
               <div className="flex flex-row items-center gap-2 ">
@@ -127,7 +165,7 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
                 </div>
               </div>
               <button
-                className="svg_icon inline-block w-[24px] text-white md:w-[44px]"
+                className="svg_icon inline-block w-[32px] text-white md:w-[44px]"
                 type="button"
                 onClick={onClose}
               >
@@ -135,35 +173,65 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
               </button>
             </div>
 
-            <div className="min-h[400px] rounded-b-xl bg-white p-4">
-              <input
-                className="px-4 py-2 outline-none"
-                value={message}
-                placeholder="Type Your Message Here"
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <ul className="mt-4 flex h-96 flex-col-reverse gap-2 overflow-auto py-4">
-                {getMessages().map((message) => (
-                  <MessageBubble message={message} />
-                ))}
-              </ul>
-              <div className="flex flex-row items-center justify-between py-2">
-                <div className="flex flex-row items-center gap-4">
-                  <div className="w-[15px] md:w-[24px]">
+            <div className="min-h[400px] rounded-b-xl bg-white">
+              <div className="p-4">
+                <input
+                  className="px-4 py-2 outline-none"
+                  value={message.text}
+                  placeholder="Type Your Message Here"
+                  onChange={(e) => setMessage({ text: e.target.value })}
+                />
+                <ul className="mt-4 flex h-96 flex-col-reverse gap-2 overflow-auto py-4">
+                  {getMessages().map((message) => (
+                    <MessageBubble message={message} />
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-row items-center justify-between bg-gray-100 p-4">
+                <div className="relative flex flex-row items-center gap-4">
+                  <button
+                    type="button"
+                    className="w-[24px]"
+                    onClick={() => setOpenEmojiPicker(true)}
+                  >
                     <HappyEmojiIcon />
-                  </div>
-                  <div className="w-[15px] md:w-[24px]">
+                  </button>
+                  {openEmojiPicker && (
+                    <div className="absolute bottom-5 left-2">
+                      <EmojiPicker
+                        lazyLoadEmojis
+                        onEmojiClick={(e) => {
+                          setMessage({ text: message.text + e.emoji });
+                          setOpenEmojiPicker(false);
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  <input
+                    ref={fileBrowserRef}
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <button
+                    type="button"
+                    className="w-[24px]"
+                    onClick={() => {
+                      fileBrowserRef.current.click();
+                    }}
+                  >
                     <AttachCircleIcon />
-                  </div>
+                  </button>
                 </div>
                 <button
-                  className="purple_gradient_bg_light flex flex-row items-center gap-4 rounded py-2 px-4 text-white"
+                  className="purple_gradient_bg_light flex flex-row items-center gap-2 rounded py-2 px-4 text-white"
                   type="button"
                   onClick={() => {
                     handleSendMessage(message);
                   }}
                 >
-                  Send Message{' '}
+                  Send
                   <div className="w-[15px] md:w-[24px]">
                     <SendIcon />
                   </div>

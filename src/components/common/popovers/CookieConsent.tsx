@@ -16,7 +16,6 @@ interface CookieConsentTypes {
 const CookieConsent = ({ onSubmit, onClose, open }: CookieConsentTypes) => {
   const { width } = useViewport();
   const { setGlobalOverflow } = useContext(OverflowContext);
-
   return (
     <AnimatePresence>
       {open && (
@@ -68,7 +67,7 @@ const CookieConsent = ({ onSubmit, onClose, open }: CookieConsentTypes) => {
                 },
               },
             }}
-            className="fixed bottom-0 z-10 w-full md:w-11/12 lg:relative lg:max-w-[780px]"
+            className="fixed bottom-0 z-10 h-fit w-full md:w-11/12 lg:relative lg:max-w-[780px]"
           >
             <div className="relative overflow-hidden rounded bg-teal-500 px-6 py-10 md:rounded-lg md:shadow-xl">
               <div className="mx-auto flex w-fit flex-row items-center gap-2">
@@ -79,15 +78,7 @@ const CookieConsent = ({ onSubmit, onClose, open }: CookieConsentTypes) => {
                   HOW MENTOR OCEAN USES COOKIES
                 </h4>
               </div>
-              <div
-                className="custom_scrollbar mt-4 overflow-y-auto px-6 pb-6 pt-5 md:max-h-[90vh]"
-                style={{
-                  height:
-                    width < 1064 && typeof window !== 'undefined'
-                      ? window.innerHeight - 70
-                      : 'auto',
-                }}
-              >
+              <div className="custom_scrollbar mt-4 overflow-y-auto px-6 pb-6 pt-5 md:max-h-[90vh]">
                 <p className="text-center font-normal text-zinc-800">
                   We use cookies that help us provide you with the best possible
                   shoping experience with us. For example, they allow us to
