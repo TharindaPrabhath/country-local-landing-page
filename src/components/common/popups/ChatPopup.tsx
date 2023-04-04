@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint react/jsx-one-expression-per-line: "off" */
 import { useContext, useState, useRef } from 'react';
-import { Dialog } from '@headlessui/react';
+import { Dialog, Menu } from '@headlessui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import EmojiPicker from 'emoji-picker-react';
@@ -13,7 +13,6 @@ import CloseCircleIcon from '../../../../public/icons/close-circle.svg';
 import HappyEmojiIcon from '../../../../public/icons/happy-emoji.svg';
 import AttachCircleIcon from '../../../../public/icons/attach-circle.svg';
 import SendIcon from '../../../../public/icons/send.svg';
-
 import ProfileImage from '../../../../public/Ellipse 3.jpg';
 
 const MessageBubble = ({ message }: { message: Message }) => (
@@ -144,14 +143,44 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
             <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-6 py-5 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
               <div className="flex flex-row items-center gap-2 ">
                 <div className="h-14 rounded-full border-2 border-solid border-blue-500">
-                  <Image
-                    className="rounded-full"
-                    src={ProfileImage}
-                    alt="Person profile image"
-                    width={50}
-                    height={50}
-                    objectFit="contain"
-                  />
+                  <Menu as="div" className="relative">
+                    <Menu.Button className="flex h-[50px] w-[50px] items-center justify-center gap-3 rounded-full shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg focus-visible:rounded-full focus-visible:ring-offset-0">
+                      <Image
+                        className="rounded-full"
+                        src={ProfileImage}
+                        alt="Person profile image"
+                        width={50}
+                        height={50}
+                        objectFit="contain"
+                      />
+                    </Menu.Button>
+                    <Menu.Items className="focus-green absolute top-14 w-[220px] rounded-lg bg-white py-2 shadow-spread">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            className={`block rounded-md px-5 py-[9px] text-left text-sm text-[#515151] ${
+                              active && 'bg-[#f0efef]'
+                            }`}
+                            href="/login"
+                          >
+                            Archive
+                          </a>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            className={`block rounded-md px-5 py-[9px] text-left text-sm text-[#515151] ${
+                              active && 'bg-[#f0efef]'
+                            }`}
+                            href="/sign-up"
+                          >
+                            Block user
+                          </a>
+                        )}
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Menu>
                 </div>
 
                 <div>
@@ -175,18 +204,22 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
 
             <div className="min-h[400px] rounded-b-xl bg-white">
               <div className="p-4">
-                <input
-                  className="px-4 py-2 outline-none"
-                  value={message.text}
-                  placeholder="Type Your Message Here"
-                  onChange={(e) => setMessage({ text: e.target.value })}
-                />
                 <ul className="mt-4 flex h-96 flex-col-reverse gap-2 overflow-auto py-4">
                   {getMessages().map((message) => (
                     <MessageBubble message={message} />
                   ))}
                 </ul>
               </div>
+              <div className="flex flex-row items-center justify-between px-4 py-2 text-sm text-gray-500">
+                <p>Use at least 40 characters</p>
+                <p>{message.text.length}/2500</p>
+              </div>
+              <input
+                className="w-full px-4 py-2 outline-none"
+                value={message.text}
+                placeholder="Type Your Message Here"
+                onChange={(e) => setMessage({ text: e.target.value })}
+              />
               <div className="flex flex-row items-center justify-between bg-gray-100 p-4">
                 <div className="relative flex flex-row items-center gap-4">
                   <button
