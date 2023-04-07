@@ -154,20 +154,19 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
           >
             <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-6 py-5 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
               <div className="flex flex-row items-center gap-2">
-                <div className="relative h-[52px] min-w-fit overflow-hidden rounded-full border-2 border-solid border-blue-500">
+                <div className="relative h-[53px] min-w-fit rounded-full border-2 border-solid border-blue-500">
                   <Image
-                    className="w-50 h-50 rounded-full"
+                    className="rounded-full"
                     src={ProfileImage}
                     alt="Person profile image"
                     width={50}
                     height={50}
-                    // layout="fill"
-                    objectFit="cover"
+                    objectFit="contain"
                   />
+                  {isOnline && (
+                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500" />
+                  )}
                 </div>
-                {isOnline && (
-                  <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500" />
-                )}
 
                 <div>
                   <h2 className="font-semibold text-white">
