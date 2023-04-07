@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint react/jsx-one-expression-per-line: "off" */
@@ -13,7 +14,7 @@ import CloseCircleIcon from '../../../../public/icons/close-circle.svg';
 import HappyEmojiIcon from '../../../../public/icons/happy-emoji.svg';
 import AttachCircleIcon from '../../../../public/icons/attach-circle.svg';
 import SendIcon from '../../../../public/icons/send.svg';
-import ProfileImage from '../../../../public/Ellipse 3.jpg';
+import ProfileImage from '../../../../public/other-service-profile.jpg';
 import ThreeDotsIcon from '../../../../public/icons/three-dots.png';
 
 const MessageBubble = ({ message }: { message: Message }) => (
@@ -59,12 +60,18 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
     { text: '👋 Hey can you help me with this...' },
     { text: 'Can you train me on..' },
   ]);
+  const [showWarning, setShowWarning] = useState(false);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
   const isMobile = width < 720;
 
   const handleSendMessage = (message: Message) => {
     if (!message.text && !message.image) return;
+    if (message.text.length < 40 && !isMobile) {
+      setShowWarning(true);
+      return;
+    }
+    setShowWarning(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     message.text && setMessages([...messages, { text: message.text }]);
     setMessage({ text: '' });
@@ -146,20 +153,21 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
             className="h:screen fixed top-0 bottom-0 flex w-full flex-col justify-between bg-white md:w-11/12 md:rounded-t-xl md:rounded-b-none md:shadow-xl lg:relative lg:max-w-[540px]"
           >
             <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-6 py-5 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
-              <div className="flex flex-row items-center gap-2 ">
-                <div className="relative h-14 rounded-full border-2 border-solid border-blue-500">
+              <div className="flex flex-row items-center gap-2">
+                <div className="relative h-[52px] min-w-fit overflow-hidden rounded-full border-2 border-solid border-blue-500">
                   <Image
-                    className="rounded-full"
+                    className="w-50 h-50 rounded-full"
                     src={ProfileImage}
                     alt="Person profile image"
                     width={50}
                     height={50}
-                    objectFit="contain"
+                    // layout="fill"
+                    objectFit="cover"
                   />
-                  {isOnline && (
-                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500" />
-                  )}
                 </div>
+                {isOnline && (
+                  <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500" />
+                )}
 
                 <div>
                   <h2 className="font-semibold text-white">
@@ -223,8 +231,9 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
             </div>
 
             {!isMobile && (
-              <input
+              <textarea
                 className="w-full p-4 outline-none"
+                rows={5}
                 value={message.text}
                 placeholder="Type Your Message Here"
                 onChange={(e) => setMessage({ text: e.target.value })}
@@ -240,15 +249,18 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                   ))}
                 </ul>
               </div>
-              {isMobile && (
+              {isMobile || showWarning ? (
                 <div className="flex flex-row items-center justify-between px-4 py-2 text-sm text-gray-500">
                   <p>Use at least 40 characters</p>
                   <p>{message.text.length}/2500</p>
                 </div>
+              ) : (
+                <></>
               )}
               {isMobile && (
-                <input
-                  className="w-full px-4 py-2 outline-none"
+                <textarea
+                  className="h-fit w-full resize-y break-all px-4 py-2 outline-none"
+                  // rows={3}
                   value={message.text}
                   placeholder="Type Your Message Here"
                   onChange={(e) => setMessage({ text: e.target.value })}

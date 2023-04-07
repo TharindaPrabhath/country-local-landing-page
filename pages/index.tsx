@@ -68,7 +68,7 @@ const Home: NextPage = () => {
         open={openCookieConsent}
         onSubmit={() => {
           setOpenCookieConsent(false);
-          setOpenCookieSettings(true);
+          // setOpenCookieSettings(true);
         }}
         onClose={() => {
           setOpenCookieConsent(false);
