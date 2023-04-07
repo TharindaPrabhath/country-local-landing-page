@@ -35,6 +35,7 @@ const HomePage = () => {
         />
         <ChatPopup
           open={openChatPopup}
+          isOnline
           onSend={() => {}}
           onClose={() => {
             setOpenChatPopup(false);

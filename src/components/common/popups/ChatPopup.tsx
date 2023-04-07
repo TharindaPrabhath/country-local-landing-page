@@ -14,6 +14,7 @@ import HappyEmojiIcon from '../../../../public/icons/happy-emoji.svg';
 import AttachCircleIcon from '../../../../public/icons/attach-circle.svg';
 import SendIcon from '../../../../public/icons/send.svg';
 import ProfileImage from '../../../../public/Ellipse 3.jpg';
+import ThreeDotsIcon from '../../../../public/icons/three-dots.png';
 
 const MessageBubble = ({ message }: { message: Message }) => (
   <div>
@@ -39,6 +40,7 @@ interface ChatPopupTypes {
   onSend: () => void;
   onClose: (e: any) => void;
   open: boolean;
+  isOnline: boolean;
 }
 
 interface Message {
@@ -46,7 +48,7 @@ interface Message {
   image?: any;
 }
 
-const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
+const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
   const { width } = useViewport();
   const { setGlobalOverflow } = useContext<any>(OverflowContext);
   const fileBrowserRef = useRef<any>();
@@ -54,9 +56,12 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
     text: '',
   });
   const [messages, setMessages] = useState<Message[]>([
-    { text: 'Hey can you help me with this...' },
+    { text: '👋 Hey can you help me with this...' },
+    { text: 'Can you train me on..' },
   ]);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
+
+  const isMobile = width < 720;
 
   const handleSendMessage = (message: Message) => {
     if (!message.text && !message.image) return;
@@ -108,7 +113,7 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
           exit="exit"
           open={open}
           onClose={onClose}
-          className="fixed inset-0 z-50 md:flex md:items-center md:justify-center"
+          className="h:screen fixed inset-0 z-50 md:flex md:items-center md:justify-center"
         >
           <Dialog.Overlay
             onClick={() => {
@@ -138,49 +143,22 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
                 },
               },
             }}
-            className="fixed bottom-0 w-full md:w-11/12 lg:relative lg:max-w-[540px]"
+            className="h:screen fixed top-0 bottom-0 flex w-full flex-col justify-between bg-white md:w-11/12 md:rounded-t-xl md:rounded-b-none md:shadow-xl lg:relative lg:max-w-[540px]"
           >
             <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-6 py-5 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
               <div className="flex flex-row items-center gap-2 ">
-                <div className="h-14 rounded-full border-2 border-solid border-blue-500">
-                  <Menu as="div" className="relative">
-                    <Menu.Button className="flex h-[50px] w-[50px] items-center justify-center gap-3 rounded-full shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg focus-visible:rounded-full focus-visible:ring-offset-0">
-                      <Image
-                        className="rounded-full"
-                        src={ProfileImage}
-                        alt="Person profile image"
-                        width={50}
-                        height={50}
-                        objectFit="contain"
-                      />
-                    </Menu.Button>
-                    <Menu.Items className="focus-green absolute top-14 w-[220px] rounded-lg bg-white py-2 shadow-spread">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            className={`block rounded-md px-5 py-[9px] text-left text-sm text-[#515151] ${
-                              active && 'bg-[#f0efef]'
-                            }`}
-                            href="/login"
-                          >
-                            Archive
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            className={`block rounded-md px-5 py-[9px] text-left text-sm text-[#515151] ${
-                              active && 'bg-[#f0efef]'
-                            }`}
-                            href="/sign-up"
-                          >
-                            Block user
-                          </a>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Menu>
+                <div className="relative h-14 rounded-full border-2 border-solid border-blue-500">
+                  <Image
+                    className="rounded-full"
+                    src={ProfileImage}
+                    alt="Person profile image"
+                    width={50}
+                    height={50}
+                    objectFit="contain"
+                  />
+                  {isOnline && (
+                    <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500" />
+                  )}
                 </div>
 
                 <div>
@@ -193,16 +171,68 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
                   </p>
                 </div>
               </div>
-              <button
-                className="svg_icon inline-block w-[32px] text-white md:w-[44px]"
-                type="button"
-                onClick={onClose}
-              >
-                <CloseCircleIcon />
-              </button>
+
+              <div className="flex flex-row items-center gap-4">
+                <Menu as="div" className="relative">
+                  <Menu.Button className="flex h-[50px] w-[50px] items-center justify-center gap-3 rounded-full shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg focus-visible:rounded-full focus-visible:ring-offset-0">
+                    <Image
+                      className="rounded-full"
+                      src={ThreeDotsIcon}
+                      alt="Three dots for vertical menu"
+                      width={20}
+                      height={20}
+                      objectFit="contain"
+                    />
+                  </Menu.Button>
+
+                  <Menu.Items className="focus-green absolute top-14 w-[220px] rounded-lg bg-white py-2 shadow-spread">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          className={`block rounded-md px-5 py-[9px] text-left text-sm text-[#515151] ${
+                            active && 'bg-[#f0efef]'
+                          }`}
+                          href="/login"
+                        >
+                          Archive
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          className={`block rounded-md px-5 py-[9px] text-left text-sm text-[#515151] ${
+                            active && 'bg-[#f0efef]'
+                          }`}
+                          href="/sign-up"
+                        >
+                          Block user
+                        </a>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Menu>
+                <button
+                  className="svg_icon inline-block w-[32px] text-white md:w-[44px]"
+                  type="button"
+                  onClick={onClose}
+                >
+                  <CloseCircleIcon />
+                </button>
+              </div>
             </div>
 
-            <div className="min-h[400px] rounded-b-xl bg-white">
+            {!isMobile && (
+              <input
+                className="w-full p-4 outline-none"
+                value={message.text}
+                placeholder="Type Your Message Here"
+                onChange={(e) => setMessage({ text: e.target.value })}
+              />
+            )}
+
+            {/* <div className="h-full bg-white" /> */}
+            <div className="bg-white">
               <div className="p-4">
                 <ul className="mt-4 flex h-96 flex-col-reverse gap-2 overflow-auto py-4">
                   {getMessages().map((message) => (
@@ -210,17 +240,21 @@ const ChatPopup = ({ onSend, onClose, open }: ChatPopupTypes) => {
                   ))}
                 </ul>
               </div>
-              <div className="flex flex-row items-center justify-between px-4 py-2 text-sm text-gray-500">
-                <p>Use at least 40 characters</p>
-                <p>{message.text.length}/2500</p>
-              </div>
-              <input
-                className="w-full px-4 py-2 outline-none"
-                value={message.text}
-                placeholder="Type Your Message Here"
-                onChange={(e) => setMessage({ text: e.target.value })}
-              />
-              <div className="flex flex-row items-center justify-between bg-gray-100 p-4">
+              {isMobile && (
+                <div className="flex flex-row items-center justify-between px-4 py-2 text-sm text-gray-500">
+                  <p>Use at least 40 characters</p>
+                  <p>{message.text.length}/2500</p>
+                </div>
+              )}
+              {isMobile && (
+                <input
+                  className="w-full px-4 py-2 outline-none"
+                  value={message.text}
+                  placeholder="Type Your Message Here"
+                  onChange={(e) => setMessage({ text: e.target.value })}
+                />
+              )}
+              <div className="flex flex-row items-center justify-between bg-gray-100 p-4 md:rounded-b-xl">
                 <div className="relative flex flex-row items-center gap-4">
                   <button
                     type="button"

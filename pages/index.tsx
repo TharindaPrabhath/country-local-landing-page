@@ -58,6 +58,7 @@ const Home: NextPage = () => {
       />
       <ChatPopup
         open={openChatPopup}
+        isOnline
         onSend={() => {}}
         onClose={() => {
           setOpenChatPopup(false);
