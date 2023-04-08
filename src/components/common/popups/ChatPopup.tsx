@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint react/jsx-one-expression-per-line: "off" */
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { Dialog, Menu } from '@headlessui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -56,14 +57,23 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
   const [message, setMessage] = useState<Message>({
     text: '',
   });
+  const isMobile = width < 720;
   const [messages, setMessages] = useState<Message[]>([
     { text: '👋 Hey can you help me with this...' },
     { text: 'Can you train me on..' },
   ]);
   const [showWarning, setShowWarning] = useState(false);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
+  const [textAreaFocussed, setTextAreaFocussed] = useState(false);
 
-  const isMobile = width < 720;
+  useEffect(() => {
+    if (!isMobile) {
+      setMessages([
+        { text: '👋 Hey can you help me with this...' },
+        { text: 'Can you train me on..' },
+      ]);
+    } else setMessages([]);
+  }, [isMobile]);
 
   const handleSendMessage = (message: Message) => {
     if (!message.text && !message.image) return;
@@ -150,9 +160,9 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                 },
               },
             }}
-            className="h:screen fixed top-0 bottom-0 flex w-full flex-col justify-between bg-white md:w-11/12 md:rounded-t-xl md:rounded-b-none md:shadow-xl lg:relative lg:max-w-[540px]"
+            className="h:screen fixed top-0 bottom-0 w-full bg-white md:w-11/12 md:rounded-t-xl md:rounded-b-none md:shadow-xl lg:relative lg:max-w-[540px]"
           >
-            <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-6 py-5 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
+            <div className="purple_gradient_bg_light  z-50 flex flex-row items-center justify-between px-6 py-4 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
               <div className="flex flex-row items-center gap-2">
                 <div className="relative h-[53px] min-w-fit rounded-full border-2 border-solid border-blue-500">
                   <Image
@@ -179,8 +189,8 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                 </div>
               </div>
 
-              <div className="flex flex-row items-center gap-4">
-                <Menu as="div" className="relative">
+              <div className="absolute top-2 right-2 flex flex-row items-center gap-4">
+                <Menu as="div" className="relative z-50">
                   <Menu.Button className="flex h-[50px] w-[50px] items-center justify-center gap-3 rounded-full shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg focus-visible:rounded-full focus-visible:ring-offset-0">
                     <Image
                       className="rounded-full"
@@ -231,7 +241,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
 
             {!isMobile && (
               <textarea
-                className="w-full p-4 outline-none"
+                className="absolute top-[80px] left-0 right-0 w-full p-4 outline-none"
                 rows={5}
                 value={message.text}
                 placeholder="Type Your Message Here"
@@ -239,8 +249,11 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
               />
             )}
 
-            {/* <div className="h-full bg-white" /> */}
-            <div className="bg-white">
+            <div
+              className={`${isMobile && 'absolute left-0 right-0'} ${
+                textAreaFocussed ? 'bottom-0' : 'bottom-0'
+              }`}
+            >
               <div className="p-4">
                 <ul className="mt-4 flex h-96 flex-col-reverse gap-2 overflow-auto py-4">
                   {getMessages().map((message) => (
@@ -248,7 +261,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                   ))}
                 </ul>
               </div>
-              {isMobile || showWarning ? (
+              {showWarning ? (
                 <div className="flex flex-row items-center justify-between px-4 py-2 text-sm text-gray-500">
                   <p>Use at least 40 characters</p>
                   <p>{message.text.length}/2500</p>
@@ -260,6 +273,12 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                 <textarea
                   className="h-fit w-full resize-y break-all px-4 py-2 outline-none"
                   // rows={3}
+                  onFocus={() => {
+                    if (isMobile) setTextAreaFocussed(true);
+                  }}
+                  onBlur={() => {
+                    if (isMobile) setTextAreaFocussed(false);
+                  }}
                   value={message.text}
                   placeholder="Type Your Message Here"
                   onChange={(e) => setMessage({ text: e.target.value })}
