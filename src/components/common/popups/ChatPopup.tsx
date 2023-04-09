@@ -52,6 +52,7 @@ interface Message {
 
 const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
   const { width } = useViewport();
+  const emojiPickerRef = useRef<any>();
   const { setGlobalOverflow } = useContext<any>(OverflowContext);
   const fileBrowserRef = useRef<any>();
   const [message, setMessage] = useState<Message>({
@@ -74,6 +75,28 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
       ]);
     } else setMessages([]);
   }, [isMobile]);
+
+  // The below useEffect detects the outside click from the EmojiPicker component and take actions.
+  useEffect(() => {
+    const listener = (event: any) => {
+      if (
+        !emojiPickerRef.current ||
+        emojiPickerRef.current.contains(event.target)
+      ) {
+        return;
+      }
+
+      setOpenEmojiPicker(!openEmojiPicker);
+    };
+
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
+
+    return () => {
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [emojiPickerRef, openEmojiPicker]);
 
   const handleSendMessage = (message: Message) => {
     if (!message.text && !message.image) return;
@@ -250,17 +273,36 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
             )}
 
             <div
-              className={`${isMobile && 'absolute left-0 right-0'} ${
+              className={`-z-10 ${isMobile && 'absolute left-0 right-0'} ${
                 textAreaFocussed ? 'bottom-0' : 'bottom-0'
               }`}
             >
               <div className="p-4">
-                <ul className="-z-10 mt-4 flex h-[500px] flex-col-reverse gap-2 overflow-auto overflow-y-auto overflow-x-hidden py-4">
+                <ul className="mt-4 flex h-[420px] flex-col-reverse gap-2 overflow-auto overflow-y-auto overflow-x-hidden py-4">
                   {getMessages().map((message) => (
                     <MessageBubble message={message} />
                   ))}
                 </ul>
               </div>
+              {isMobile && messages.length === 0 && (
+                <div className="px-2 py-4">
+                  <div className="relative h-[53px] min-w-fit rounded-full">
+                    <Image
+                      className="rounded-full"
+                      src={ProfileImage}
+                      alt="Person profile image"
+                      width={50}
+                      height={50}
+                      objectFit="contain"
+                    />
+                  </div>
+                  <h2 className="pt-2 font-semibold">rifqiarkaanul</h2>
+                  <p className=" text-gray-600">
+                    Start a conversation about your requirements with
+                    rifqiarkaanul
+                  </p>
+                </div>
+              )}
               {showWarning ? (
                 <div className="flex flex-row items-center justify-between px-4 py-2 text-sm text-gray-500">
                   <p>Use at least 40 characters</p>
@@ -294,8 +336,12 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                     <HappyEmojiIcon />
                   </button>
                   {openEmojiPicker && (
-                    <div className="absolute bottom-5 left-2 z-50">
+                    <div
+                      className="absolute bottom-5 left-2 z-50"
+                      ref={emojiPickerRef}
+                    >
                       <EmojiPicker
+                        height={400}
                         lazyLoadEmojis
                         onEmojiClick={(e) => {
                           setMessage({ text: message.text + e.emoji });
