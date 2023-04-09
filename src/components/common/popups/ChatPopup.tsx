@@ -162,7 +162,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
             }}
             className="h:screen fixed top-0 bottom-0 w-full bg-white md:w-11/12 md:rounded-t-xl md:rounded-b-none md:shadow-xl lg:relative lg:max-w-[540px]"
           >
-            <div className="purple_gradient_bg_light  z-50 flex flex-row items-center justify-between px-6 py-4 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
+            <div className="purple_gradient_bg_light z-50 flex flex-row items-center justify-between px-6 py-4 md:rounded-t-xl md:rounded-b-none md:shadow-xl">
               <div className="flex flex-row items-center gap-2">
                 <div className="relative h-[53px] min-w-fit rounded-full border-2 border-solid border-blue-500">
                   <Image
@@ -189,9 +189,9 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                 </div>
               </div>
 
-              <div className="absolute top-2 right-2 flex flex-row items-center gap-4">
+              <div className="absolute top-2 right-2 flex flex-row items-center gap-2">
                 <Menu as="div" className="relative z-50">
-                  <Menu.Button className="flex h-[50px] w-[50px] items-center justify-center gap-3 rounded-full shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg focus-visible:rounded-full focus-visible:ring-offset-0">
+                  <Menu.Button className="flex h-[35px] w-[35px] items-center justify-center gap-3 rounded-full transition-shadow duration-300 ease-in-out hover:shadow-lg focus-visible:rounded-full focus-visible:ring-offset-0">
                     <Image
                       className="rounded-full"
                       src={ThreeDotsIcon}
@@ -202,7 +202,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                     />
                   </Menu.Button>
 
-                  <Menu.Items className="focus-green absolute top-14 w-[220px] rounded-lg bg-white py-2 shadow-spread">
+                  <Menu.Items className="focus-green absolute top-14 right-0 w-[220px] rounded-lg bg-white py-2 shadow-spread">
                     <Menu.Item>
                       {({ active }) => (
                         <a
@@ -255,7 +255,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
               }`}
             >
               <div className="p-4">
-                <ul className="mt-4 flex h-96 flex-col-reverse gap-2 overflow-auto py-4">
+                <ul className="-z-10 mt-4 flex h-[500px] flex-col-reverse gap-2 overflow-auto overflow-y-auto overflow-x-hidden py-4">
                   {getMessages().map((message) => (
                     <MessageBubble message={message} />
                   ))}
@@ -271,7 +271,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
               )}
               {isMobile && (
                 <textarea
-                  className="h-fit w-full resize-y break-all px-4 py-2 outline-none"
+                  className="h-fit w-full resize-y break-all border-t-2 border-t-gray-100 px-4 py-2 outline-none"
                   // rows={3}
                   onFocus={() => {
                     if (isMobile) setTextAreaFocussed(true);
@@ -294,7 +294,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                     <HappyEmojiIcon />
                   </button>
                   {openEmojiPicker && (
-                    <div className="absolute bottom-5 left-2">
+                    <div className="absolute bottom-5 left-2 z-50">
                       <EmojiPicker
                         lazyLoadEmojis
                         onEmojiClick={(e) => {

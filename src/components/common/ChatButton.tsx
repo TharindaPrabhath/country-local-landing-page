@@ -47,7 +47,7 @@ const ChatButton = ({ isOnline = false, onClick }: ChatButtonProps) => {
       )}
 
       {width <= 768 && (
-        <div className="flex flex-row items-center justify-between rounded-full bg-white px-4 py-2 md:rounded-xl md:shadow-xl">
+        <div className="flex flex-row items-center justify-between rounded-full bg-white px-3 py-1 shadow-xl">
           <div className="flex flex-row items-center gap-4">
             <div className="relative">
               <Image
@@ -57,9 +57,12 @@ const ChatButton = ({ isOnline = false, onClick }: ChatButtonProps) => {
                 width={50}
                 height={50}
               />
-              {isOnline && (
-                <div className="absolute bottom-2 right-1 h-3 w-3 rounded-full bg-green-500" />
-              )}
+
+              <div
+                className={`absolute bottom-2 right-1 h-3 w-3 rounded-full border-2 border-white ${
+                  isOnline ? 'bg-green-500' : 'bg-gray-400'
+                }`}
+              />
             </div>
 
             <h2 className="font-semibold">Chat</h2>
