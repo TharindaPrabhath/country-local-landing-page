@@ -24,7 +24,7 @@ const ChatButton = ({ isOnline = false, onClick }: ChatButtonProps) => {
       onClick={onClick}
     >
       {width > 768 && (
-        <div className="purple_gradient_bg_light flex flex-row items-center justify-between px-3 py-3 md:rounded-xl md:shadow-xl">
+        <div className="purple_gradient_bg_light relative flex flex-row items-center justify-between px-3 py-3 md:rounded-xl md:shadow-xl">
           <div className="flex flex-row items-center gap-2">
             <Image
               className="rounded-full"
@@ -32,6 +32,11 @@ const ChatButton = ({ isOnline = false, onClick }: ChatButtonProps) => {
               alt="person profile image"
               width={50}
               height={50}
+            />
+            <div
+              className={`absolute left-12 bottom-3 h-3 w-3 rounded-full border-2 border-white ${
+                isOnline ? 'bg-green-500' : 'bg-gray-400'
+              }`}
             />
             <div>
               <h2 className="font-semibold text-white">

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable prettier/prettier */
@@ -17,26 +18,24 @@ import AttachCircleIcon from '../../../../public/icons/attach-circle.svg';
 import SendIcon from '../../../../public/icons/send.svg';
 import ProfileImage from '../../../../public/other-service-profile.jpg';
 import ThreeDotsIcon from '../../../../public/icons/three-dots.png';
+import CloseIcon from '../../../../public/icons/xmark.svg';
 
-const MessageBubble = ({ message }: { message: Message }) => (
-  <div>
-    {message.text && (
-      <p className="w-fit  rounded-lg border-2 border-gray-200 p-3 first:rounded-tl-none first:rounded-bl-2xl last:rounded-tl-2xl last:rounded-bl-none">
-        {message.text}
-      </p>
-    )}
-
-    {message.image && (
-      <Image
-        src={message.image}
-        alt="Message image"
-        objectFit="contain"
-        width={150}
-        height={150}
-      />
-    )}
-  </div>
-);
+// const MessageBubble = ({ message }: { message: Message }) => (
+//   <>
+//     {message.text && (
+//       <p className="w-fit border-2 border-gray-200 p-3">{message.text}</p>
+//     )}
+//     {message.image && (
+//       <Image
+//         src={message.image}
+//         alt="Message image"
+//         objectFit="contain"
+//         width={150}
+//         height={150}
+//       />
+//     )}
+//   </>
+// );
 
 interface ChatPopupTypes {
   onSend: () => void;
@@ -279,8 +278,22 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
             >
               <div className="p-4">
                 <ul className="mt-4 flex h-[420px] flex-col-reverse gap-2 overflow-auto overflow-y-auto overflow-x-hidden py-4">
-                  {getMessages().map((message) => (
-                    <MessageBubble message={message} />
+                  {getMessages().map((message, i) => (
+                    <li
+                      key={i}
+                      className="w-fit rounded-lg border-2 border-gray-200 p-3 first:rounded-tl-none first:rounded-bl-2xl last:rounded-tl-2xl last:rounded-bl-none"
+                    >
+                      {message.text}
+                      {message.image && (
+                        <Image
+                          src={message.image}
+                          alt="Message image"
+                          objectFit="contain"
+                          width={150}
+                          height={150}
+                        />
+                      )}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -297,7 +310,7 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                     />
                   </div>
                   <h2 className="pt-2 font-semibold">rifqiarkaanul</h2>
-                  <p className=" text-gray-600">
+                  <p className=" text-xs text-gray-600">
                     Start a conversation about your requirements with
                     rifqiarkaanul
                   </p>
@@ -340,9 +353,18 @@ const ChatPopup = ({ onSend, onClose, open, isOnline }: ChatPopupTypes) => {
                       className="absolute bottom-5 left-2 z-50"
                       ref={emojiPickerRef}
                     >
+                      <button
+                        type="button"
+                        className="svg_icon w-[15px]"
+                        onClick={() => setOpenEmojiPicker(false)}
+                      >
+                        <CloseIcon />
+                      </button>
                       <EmojiPicker
-                        height={400}
+                        height={320}
+                        width={300}
                         lazyLoadEmojis
+                        searchDisabled
                         onEmojiClick={(e) => {
                           setMessage({ text: message.text + e.emoji });
                           setOpenEmojiPicker(false);
