@@ -19,12 +19,13 @@ const Hero = () => (
         modules={[EffectFade, Navigation, Pagination]}
         className="mySwiper"
       >
-        <SwiperSlide>
+        <SwiperSlide className="relative">
           <img
             className="object-position:left min-h-[740px] w-[full] object-cover lg:h-screen lg:w-screen"
             src="/tribehero.png"
             alt="list-page-slider"
           />
+          <div className="absolute bottom-0 left-0 right-0 h-3/5 w-full bg-gradient-to-t from-black to-transparent opacity-50" />
         </SwiperSlide>
         <SwiperSlide>
           <img
@@ -32,18 +33,19 @@ const Hero = () => (
             src="/plan-fullsize-4.jpg"
             alt="plan-fullsize-4"
           />
+          <div className="absolute bottom-0 left-0 right-0 h-3/5 w-full bg-gradient-to-t from-black to-transparent opacity-50" />
         </SwiperSlide>
       </Swiper>
 
       <div className="relative">
         <div className="absolute bottom-20 z-50 flex w-full flex-col p-8 ">
-          <h1 className=" font-bold text-[#fff] sm:text-left md:text-[36px] md:leading-snug lg:text-center lg:text-[64px]">
+          <h1 className="text-2xl font-bold text-[#fff] sm:text-left md:text-[36px] md:leading-snug lg:text-center lg:text-[64px]">
             Support Local communities
           </h1>
           <p className=" font-normal text-[#fff] sm:text-left md:pb-6 md:text-[20px] md:leading-snug lg:text-center lg:text-[32px]">
             you get better experiences, they get a better life
           </p>
-          <div className="w-full2 absolute bottom-[0%] right-[50%] translate-x-1/2 translate-y-1/2 rounded-[50px] border bg-white p-3 text-[#E71575]">
+          <div className="absolute bottom-[0%] right-[50%] hidden w-fit translate-x-1/2 translate-y-1/2 rounded-[50px] border bg-white p-3 text-[#E71575] md:block">
             <svg
               width="20"
               height="49"

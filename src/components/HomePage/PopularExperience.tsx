@@ -35,7 +35,7 @@ const PopularExperience = () => (
             ['/PoppularExperiences.jpg'],
           ].map(([src]) => (
             <SwiperSlide className="  !h-[277px] !w-[425px] rounded-[20px]">
-              <div className="relative ml-3 flex !h-[277px] flex-col flex-nowrap items-stretch justify-between overflow-hidden rounded-[20px] shadow">
+              <div className="relative m-3 flex !h-[277px] flex-col flex-nowrap items-stretch justify-between overflow-hidden rounded-[20px] shadow-md">
                 <div>
                   <img className=" rounded-[20px] " src={src} alt="review 1" />
                   <div className="absolute bottom-[7px] left-0 h-[277px] w-full rounded-[20px] bg-black opacity-25" />

@@ -13,7 +13,7 @@ const Video = () => (
       <video
         className="relative w-full rounded-[16px] md:rounded-[30px]"
         src="https://embed-ssl.wistia.com/deliveries/262fd8e350169efeecfd5bfce33b7997f5a8fec0.bin"
-        autoPlay
+        // autoPlay
         controls
       >
         <track src="captions_en.vtt" kind="captions" label="english_captions" />

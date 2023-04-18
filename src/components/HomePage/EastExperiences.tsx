@@ -43,7 +43,7 @@ const EastExperiences = () => (
             ['History Buffs', '/Historyex.jpg'],
           ].map(([title, src]) => (
             <SwiperSlide className="!w-[202px]">
-              <div className="relative m-3 flex flex-col flex-nowrap items-stretch justify-between overflow-hidden rounded-[10px] ">
+              <div className="relative m-3 flex flex-col flex-nowrap items-stretch justify-between overflow-hidden rounded-[20px] drop-shadow-md">
                 <div className=" relative overflow-hidden rounded-[20px] after:duration-300 hover:after:scale-110 ">
                   <img
                     src={src}
@@ -56,7 +56,7 @@ const EastExperiences = () => (
                   Sorrento for
                 </h3>
                 <div className="absolute bottom-[60%] right-[50%] flex   w-full translate-y-1/2 translate-x-1/2 flex-col items-start  justify-center gap-4 p-5 pr-2 md:pr-5 ">
-                  <h3 className="Kostania w-full py-0 text-center text-[28px] text-base font-semibold leading-[28px]  text-[#fff] lg:text-[28px]">
+                  <h3 className="Kostania w-full py-0 text-center text-[28px] text-base font-bold leading-[28px]  text-[#fff] lg:text-[28px]">
                     {title}
                   </h3>
                 </div>
